@@ -5,11 +5,13 @@ import { useEffect, useState } from 'react'
 import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
 import { createSupabaseBrowserClient } from '@/lib/supabase/client'
+import type { User } from '@supabase/supabase-js'
 
 export default function LoginPage() {
   const [supabase] = useState(() => createSupabaseBrowserClient())
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState<User | null>(null)
   const router = useRouter()
+
 
   useEffect(() => {
     const getUser = async () => {
