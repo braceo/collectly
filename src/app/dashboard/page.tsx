@@ -12,9 +12,17 @@ export default async function DashboardPage() {
   }
 
   return (
-    <main className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Welcome to your Dashboard</h1>
-      <p className="text-gray-600">This is where your products and orders will show up.</p>
+    <main className="p-6 max-w-2xl">
+      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+
+      <a
+        href="/dashboard/products/new"
+        className="inline-block mb-6 rounded-lg bg-black text-white px-4 py-2 text-sm"
+      >
+        ➕ Add a Product
+      </a>
+
+      <p className="text-gray-600">Product list will go here next.</p>
     </main>
   )
 }
