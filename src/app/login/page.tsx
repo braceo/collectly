@@ -1,12 +1,43 @@
 'use client'
 
-import { createSupabaseBrowserClient } from '@/lib/supabase/client'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
-import { useEffect, useState } from 'react'
+import { createSupabaseBrowserClient } from '@/lib/supabase/client'
 
 export default function LoginPage() {
   const [supabase] = useState(() => createSupabaseBrowserClient())
+  const [user, setUser] = useState(null)
+  const router = useRouter()
+
+  useEffect(() => {
+    const getUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      setUser(user)
+
+      if (user) {
+        router.push('/dashboard') // 👈 where to go after login
+      }
+    }
+
+    getUser()
+
+    // Listen for login/signup events
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        router.push('/dashboard') // 👈 redirect again after real-time login
+      }
+    })
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [supabase, router])
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
@@ -17,18 +48,6 @@ export default function LoginPage() {
           appearance={{ theme: ThemeSupa }}
           providers={[]}
           view="sign_in"
-          localization={{
-            variables: {
-              sign_in: {
-                email_label: 'Email',
-                password_label: 'Password',
-              },
-              sign_up: {
-                email_label: 'Email',
-                password_label: 'Password',
-              },
-            },
-          }}
         />
         <p className="text-sm text-gray-500 mt-4">
           No account? Use the “Sign up” tab above.
@@ -37,3 +56,4 @@ export default function LoginPage() {
     </div>
   )
 }
+
