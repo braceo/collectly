@@ -1,5 +1,7 @@
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import DeleteProductButton from '@/components/DeleteProductButton'
+
 
 export default async function DashboardPage() {
   const supabase = createSupabaseServerClient()
@@ -51,19 +53,8 @@ export default async function DashboardPage() {
               >
                 Edit
               </a>
-              <form
-                action={`/dashboard/products/${product.id}/delete`}
-                method="post"
-                onSubmit={(e) => {
-                  if (!confirm('Are you sure you want to delete this product?')) {
-                    e.preventDefault()
-                  }
-                }}
-              >
-                <button type="submit" className="text-sm text-red-600 underline">
-                  Delete
-                </button>
-              </form>
+             <DeleteProductButton productId={product.id} />
+
             </div>
           </div>
         ))}
